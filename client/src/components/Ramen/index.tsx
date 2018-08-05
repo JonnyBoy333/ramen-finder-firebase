@@ -11,9 +11,9 @@ import ZipCode from './ZipCode';
 
 export interface IRamenProps {
   fetchRamen: (id: string, zip: string) => any;
+  ramenListings: IRamen[] | Error;
   disabled: boolean;
-  ramenListings: IRamen[],
-  authUser: firebase.User
+  authUser: firebase.User | null
 }
 
 export interface IRamenState {
@@ -37,15 +37,16 @@ class Ramen extends React.Component<IRamenProps, IRamenState> {
   }
 
   public componentDidMount() {
-
-    db.getZip(this.props.authUser.uid)
-      .then(snapshot => {
-        this.setState({ zip: snapshot.val().zip});
-        this.setState({ initialZip: '12345'});
-      })
-      .catch(err => {
-        this.setState({ initialZip: '12345'})
-      })
+    if (this.props.authUser) {
+      db.getZip(this.props.authUser.uid)
+        .then(snapshot => {
+          this.setState({ zip: snapshot.val().zip});
+          this.setState({ initialZip: '12345'});
+        })
+        .catch(err => {
+          this.setState({ initialZip: '12345'})
+        })
+    }
   }
 
   public handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -68,17 +69,21 @@ class Ramen extends React.Component<IRamenProps, IRamenState> {
   }
 
   private fetchRamen() {
-    this.props.fetchRamen(this.props.authUser.uid, this.state.zip);
+    if (this.props.authUser) {
+      this.props.fetchRamen(this.props.authUser.uid, this.state.zip);
+    }
   }
 
   private isLoading() {
     return this.props.disabled ?
       <InProgress /> :
-      <RamenList list={this.props.ramenListings} />;
+      Array.isArray(this.props.ramenListings) ? 
+        <RamenList list={this.props.ramenListings} /> :
+        <div>Error</div>;
   }
 
   private isZipLoading() {
-    console.log('Initial Zip', this.state.initialZip);
+    // console.log('Initial Zip', this.state.initialZip);
     return !this.state.initialZip ?
       <InProgress />  :
       <ZipCode handler={this.fetchRamen} onChange={this.handleChange} disabled={this.props.disabled} initialZip={this.state.zip} />

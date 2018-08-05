@@ -8,12 +8,13 @@ import {
   NavLink
 } from 'reactstrap';
 // import SignOutButton from './SignOut';
-
 import * as routes from '../constants/routes';
 import { auth } from '../firebase';
 import IStoreState from '../store/IStoreState';
 
-const Navigation = ({ authUser }: { authUser: firebase.User }) =>
+const NavLinkX: React.ComponentClass<any> = NavLink;
+
+const Navigation = ({ authUser }: { authUser: firebase.User | null }) =>
   <div>
     <Navbar color='dark' dark={true} expand='md'>
       {authUser
@@ -29,23 +30,23 @@ const NavigationAuth = () =>
       <NavLink to={routes.LANDING} tag={RRNavLink}>Landing</NavLink>
     </NavItem> */}
     <NavItem>
-      <NavLink to={routes.HOME} tag={RRNavLink}>Home</NavLink>
+      <NavLinkX to={routes.HOME} tag={RRNavLink} >Home</NavLinkX>
     </NavItem>
     <NavItem>
-      <NavLink to={routes.ACCOUNT} tag={RRNavLink}>Account</NavLink>
+      <NavLinkX to={routes.ACCOUNT} tag={RRNavLink}>Account</NavLinkX>
     </NavItem>
     <NavItem>
-      <NavLink to={routes.SIGN_IN} tag={RRNavLink} onClick={auth.doSignOut}>Log Out</NavLink>
+      <NavLinkX to={routes.SIGN_IN} tag={RRNavLink} onClick={auth.doSignOut}>Log Out</NavLinkX>
     </NavItem>
   </Nav>
 
 const NavigationNonAuth = () =>
   <Nav className='ml-auto' navbar={true}>
     {/* <NavItem>
-      <NavLink to={routes.ACCOUNT} tag={RRNavLink}>Landing</NavLink>
+      <NavLinkX to={routes.ACCOUNT} tag={RRNavLink}>Landing</NavLinkX>
     </NavItem> */}
     <NavItem>
-      <NavLink to={routes.SIGN_IN} tag={RRNavLink}>Sign In</NavLink>
+      <NavLinkX to={routes.SIGN_IN} tag={RRNavLink}>Sign In</NavLinkX>
     </NavItem>
   </Nav>
 
