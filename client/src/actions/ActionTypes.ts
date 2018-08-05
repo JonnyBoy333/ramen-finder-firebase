@@ -21,6 +21,10 @@ export interface IAuthSuccessAction {
   readonly authUser: firebase.User;
 }
 
-type ActionTypes = IFetchRamenSuccessAction | IFetchRamenInProgressAction | IFetchRamenFailAction | IAuthSuccessAction;
+export interface ILogoutAction {
+  readonly type: ActionTypeKeys.LOG_OUT;
+}
+
+type ActionTypes = IFetchRamenSuccessAction | IFetchRamenInProgressAction | IFetchRamenFailAction | IAuthSuccessAction | ILogoutAction;
 
 export { ActionTypes };
